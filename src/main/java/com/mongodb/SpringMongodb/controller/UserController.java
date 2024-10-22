@@ -1,5 +1,6 @@
 package com.mongodb.SpringMongodb.controller;
 
+import com.mongodb.SpringMongodb.dto.AgeGroupCount;
 import com.mongodb.SpringMongodb.entity.User;
 import com.mongodb.SpringMongodb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,11 @@ public class UserController {
             @RequestParam(required = false) Integer minAge,
             @RequestParam(required = false) Integer maxAge) {
         return userService.findUsersByDynamicCriteria(name, minAge, maxAge);
+    }
+
+    @GetMapping("/age-group-count")
+    public List<AgeGroupCount> countUsersByAgeGroup() {
+        return userService.countUsersByAgeGroup();
     }
 
 }

@@ -1,12 +1,16 @@
 package com.mongodb.SpringMongodb.service;
 
+import com.mongodb.SpringMongodb.dto.AgeGroupCount;
 import com.mongodb.SpringMongodb.entity.User;
 import com.mongodb.SpringMongodb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -75,5 +79,18 @@ public class UserService {
         query.fields().include("name").include("age");
 
         return mongoTemplate.find(query, User.class);
+    }
+
+
+    public List<AgeGroupCount> countUsersByAgeGroup() {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.group("age").count().as("count"),
+                Aggregation.project("count").and("age").previousOperation(),
+                Aggregation.sort(Sort.Direction.ASC, "age")
+
+        );
+
+        AggregationResults<AgeGroupCount> results = mongoTemplate.aggregate(aggregation, "users", AgeGroupCount.class);
+        return results.getMappedResults();
     }
 }
