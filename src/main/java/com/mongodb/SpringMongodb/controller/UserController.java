@@ -83,4 +83,9 @@ public class UserController {
         userService.removeScore(id, score);
     }
 
+    @PutMapping("/add-email/{id}")
+    public void removeScore(@PathVariable String id, @RequestParam String email) {
+        userService.addEmailToDocuments(id, email);
+    }
+
 }

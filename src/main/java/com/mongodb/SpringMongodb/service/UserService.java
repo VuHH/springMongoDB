@@ -110,4 +110,11 @@ public class UserService {
 
         mongoTemplate.updateFirst(query, update, User.class);
     }
+
+    public void addEmailToDocuments(String userId, String email) {
+        Query query = new Query(Criteria.where("id").is(userId));
+        Update update = new Update().set("email", email);
+
+        mongoTemplate.updateMulti(query, update, User.class);
+    }
 }
