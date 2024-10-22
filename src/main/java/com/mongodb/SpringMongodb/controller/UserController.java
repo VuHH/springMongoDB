@@ -73,4 +73,14 @@ public class UserController {
         return userService.countUsersByAgeGroup();
     }
 
+    @PutMapping("/add-score/{id}")
+    public void addNewScore(@PathVariable String id, @RequestParam int score) {
+        userService.addNewScore(id, score);
+    }
+
+    @PutMapping("/remove-score/{id}")
+    public void removeScore(@PathVariable String id, @RequestParam int score) {
+        userService.removeScore(id, score);
+    }
+
 }

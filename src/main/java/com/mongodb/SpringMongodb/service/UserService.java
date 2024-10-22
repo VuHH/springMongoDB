@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -92,5 +93,21 @@ public class UserService {
 
         AggregationResults<AgeGroupCount> results = mongoTemplate.aggregate(aggregation, "users", AgeGroupCount.class);
         return results.getMappedResults();
+    }
+
+    public void addNewScore(String userId, int newScore) {
+        Query query = new Query(Criteria.where("id").is(userId));
+        Update update = new Update();
+        update.push("scores", newScore); // Thêm phần tử mới vào mảng
+
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
+
+    public void removeScore(String userId, int scoreToRemove) {
+        Query query = new Query(Criteria.where("id").is(userId));
+        Update update = new Update();
+        update.pull("scores", scoreToRemove);
+
+        mongoTemplate.updateFirst(query, update, User.class);
     }
 }
